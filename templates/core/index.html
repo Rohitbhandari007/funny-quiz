@@ -13,6 +13,13 @@
 </head>
 
 <body>
+
+    <audio loop id="audio" src="{% static 'error.mp3' %}"></audio>
+    <audio id="mainmenu-audio" src="{% static 'mainmenu.mp3' %}"></audio>
+    <audio id="hover-audio" src="{% static 'bubble.mp3' %}"></audio>
+
+
+
     <div class="gametitle">
         funny QUIZ
     </div>
@@ -25,22 +32,27 @@
     </div>
     <div class="container">
 
+        <label class="label-room">
 
-        Enter room name
+            Enter room name
+        </label>
         <input id="room-name-input" type="text" size="100" required><br>
-        Enter username
+
+        <label class="label-user">
+
+            Enter Username
+        </label>
         <input id="user-name-input" type="text" size="100" required><br>
 
-        <input class='button-50' id="room-name-submit" type="button" value="Enter">
+        <input class='button-30' id="room-name-submit" type="button" value="Enter" onmouseover="playHoverAudio()">
 
         <div class="errormsg" id="'errormsg">
-            <audio loop id="audio" src="{% static 'error.mp3' %}"></audio>
-            <audio id="mainmenu-audio" src="{% static 'mainmenu.mp3' %}"></audio>
+
 
 
             <div class="alert" id="alert">
                 Room name empty
-                <span class="closebtn" onclick="this.parentElement.style.visibility='hidden';">X</span>
+                <span class="closebtn" onclick="this.parentElement.style.visibility='hidden'; stopErrorMusic()">X</span>
             </div>
         </div>
 
@@ -54,6 +66,13 @@
     <script>
 
         var musicplaying = false;
+
+        const hoveraudio = document.getElementById('hover-audio')
+
+        function playHoverAudio() {
+            hoveraudio.play()
+            console.log('something')
+        }
 
         function musicVolume() {
             var volumevalue = document.getElementById('slider').value
@@ -77,6 +96,10 @@
             mainmenu.pause()
             musicplaying = false;
 
+        }
+
+        function stopErrorMusic() {
+            document.getElementById('audio').pause()
         }
 
         function toggleMusic() {
