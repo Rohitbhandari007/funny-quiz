@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=DynaPuff&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen:wght@700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
+body {
+        background: #7fe17d;
+    }
+.gametitle{
+    font-family: 'Silkscreen', cursive;
+    font-size: 50px;
+    animation-name: titlecolor;
+    animation-duration: 0s;
+    animation-iteration-count: infinite;
+    text-align: center;
+
+}
+@keyframes titlecolor {
+    0%   {background-color:red; left:0px; top:0px;}
+  25%  {background-color:yellow; left:200px; top:0px;}
+  50%  {background-color:blue; left:200px; top:200px;}
+  75%  {background-color:green; left:0px; top:200px;}
+  100% {background-color:red; left:0px; top:0px;}
+}
+
+    .container{
+        display: flex;
+        justify-content: space-around;
+        margin-top: 20px;
+        background-color: #20891e;
+        border: 10px solid black;
+        border-radius: 50px;
+        
+        
+    }
+    .gamecontainer{
+        display: flex;
+        flex-direction: column;
+        font-family: 'DynaPuff', cursive;
+        width: 400px;
+        min-height: 400px;
+
+
+    }
+    .question{
+        font-size: 20px;
+        margin-top: 10px;
+    }
+    .options{
+        margin-left: 100px;
+    }
+    .option{
+        border: 1px solid gray;
+        margin: 10px;
+        border-radius: 10px;
+        background-color: yellow;
+        padding: 10px;
+        cursor: pointer;
+    }
+    .option:hover{
+        background-color: #688405;
+    }
+
+    .chatcontainer{
+        display: flex;
+        flex-direction: column;
+        width: 250px;
+        margin-top: 5px;
+    }
+    .chatmesseges{
+        overflow-y: auto;
+        display: block;
+        min-height: 300px;
+        max-height: 300px;
+        min-width: 100px;
+        background-color: rgb(255, 255, 255);
+        font-family: 'Roboto', sans-serif;
+        color: #000;
+        font-weight: 600;
+        font-size: 15px;
+        text-align: end;
+        padding:5px;
+
+    }
+    .chatcontainer input{
+      margin-top: 2px;
+  }
+
+    .chatinput{
+      outline: none;
+      padding: 10px;
+      border: 1px solid green;
+      font-family: 'Roboto', sans-serif;
+      color: #000;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: end;
+
+
+    }
+   
+/* CSS  choreko button*/
+.button-50 {
+  appearance: button;
+  background-color: #000;
+  background-image: none;
+  border: 1px solid #000;
+  border-radius: 4px;
+  box-shadow: #fff 4px 4px 0 0,#000 4px 4px 0 1px;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-family: ITCAvantGardeStd-Bk,Arial,sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 20px;
+  margin: 0 5px 10px 0;
+  overflow: visible;
+  padding: 12px 40px;
+  text-align: center;
+  text-transform: none;
+  touch-action: manipulation;
+  user-select: none;
+  -webkit-user-select: none;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.button-50:focus {
+  text-decoration: none;
+}
+
+.button-50:hover {
+  text-decoration: none;
+}
+
+.button-50:active {
+  box-shadow: rgba(0, 0, 0, .125) 0 3px 5px inset;
+  outline: 0;
+}
+
+.button-50:not([disabled]):active {
+  box-shadow: #fff 2px 2px 0 0, #000 2px 2px 0 1px;
+  transform: translate(2px, 2px);
+}
+
+@media (min-width: 768px) {
+  .button-50 {
+    padding: 12px 50px;
+  }
+}

@@ -1,0 +1,67 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="{% static 'core/index.css' %}">
+    <!-- CSS only -->
+
+
+    <title>Chat Rooms</title>
+</head>
+
+<body>
+    <div class="gametitle">
+        funny QUIZ
+    </div>
+
+    <div class="container">
+
+
+        Enter room name
+        <input id="room-name-input" type="text" size="100" required><br>
+        Enter username
+        <input id="user-name-input" type="text" size="100" required><br>
+
+        <input class='button-50' id="room-name-submit" type="button" value="Enter">
+
+        <div class="errormsg" id="'errormsg">
+            <div class="alert" id="alert">
+                Room name empty
+                <span class="closebtn" onclick="this.parentElement.style.visibility='hidden';">X</span>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+
+    <script>
+        document.querySelector('#room-name-input').focus();
+        document.querySelector('#room-name-input').onkeyup = function (e) {
+            if (e.keyCode === 13) {  // enter, return
+                document.querySelector('#room-name-submit').click();
+            }
+        };
+
+        document.querySelector('#room-name-submit').onclick = function (e) {
+            var roomName = document.querySelector('#room-name-input').value;
+
+            if (roomName === '') {
+                console.log('room name empty');
+
+                document.getElementById('alert').style.visibility = 'visible'
+            } else {
+                window.location.pathname = '/chat/' + roomName + '/';
+
+            }
+        };
+    </script>
+</body>
+
+</html>
