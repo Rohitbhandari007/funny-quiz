@@ -34,7 +34,7 @@
         <input class='button-50' id="room-name-submit" type="button" value="Enter">
 
         <div class="errormsg" id="'errormsg">
-            <audio id="audio" src="{% static 'error.mp3' %}"></audio>
+            <audio loop id="audio" src="{% static 'error.mp3' %}"></audio>
             <audio id="mainmenu-audio" src="{% static 'mainmenu.mp3' %}"></audio>
 
 
@@ -58,15 +58,12 @@
         function musicVolume() {
             var volumevalue = document.getElementById('slider').value
             mainmenu = document.getElementById('mainmenu-audio')
-
             console.log(volumevalue)
             var newvolume = volumevalue / 100;
             console.log(newvolume)
             mainmenu.volume = newvolume;
 
         }
-
-
 
         function playMusic() {
             mainmenu = document.getElementById('mainmenu-audio')
