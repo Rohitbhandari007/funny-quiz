@@ -17,7 +17,11 @@
         funny QUIZ
     </div>
     <div class="music">
-        <img src="{% static 'volume.png' %}" class="'volicon"></img>
+        <img src="{% static 'volume.png' %}" class="'volicon" onclick={toggleMusic()}></img>
+        <div class="slidercontainer">
+            <input type="range" min="1" max="100" id="slider" value="50" class="slider" onchange="musicVolume()">
+        </div>
+
     </div>
     <div class="container">
 
@@ -49,17 +53,37 @@
 
     <script>
 
+        var musicplaying = false;
+
+        function musicVolume() {
+            var volumevalue = document.getElementById('slider').value
+            mainmenu = document.getElementById('mainmenu-audio')
+
+            console.log(volumevalue)
+            var newvolume = volumevalue / 100;
+            console.log(newvolume)
+            mainmenu.volume = newvolume;
+
+        }
+
+
 
         function playMusic() {
             mainmenu = document.getElementById('mainmenu-audio')
             mainmenu.play()
+            musicplaying = true;
 
         }
 
         function stopMusic() {
             mainmenu = document.getElementById('mainmenu-audio')
             mainmenu.pause()
+            musicplaying = false;
 
+        }
+
+        function toggleMusic() {
+            musicplaying ? stopMusic() : playMusic()
         }
 
         document.querySelector('#room-name-input').focus();

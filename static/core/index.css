@@ -25,17 +25,22 @@ body{
 .music{
     display: flex;
     justify-content: flex-end;
+    
     height: 30px;
 }
 
 .music img{
     cursor: pointer;
+    margin-right: 0px;
 }
 
 .music img:hover{
     animation: shake 0.5s;
     animation-iteration-count: infinite;
     animation-timing-function: ease-in;
+    cursor: pointer;
+}
+.slider{
     cursor: pointer;
 }
 
