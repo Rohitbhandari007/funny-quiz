@@ -16,7 +16,9 @@
     <div class="gametitle">
         funny QUIZ
     </div>
-
+    <div class="music">
+        <img src="{% static 'volume.png' %}" class="'volicon"></img>
+    </div>
     <div class="container">
 
 
@@ -28,6 +30,10 @@
         <input class='button-50' id="room-name-submit" type="button" value="Enter">
 
         <div class="errormsg" id="'errormsg">
+            <audio id="audio" src="{% static 'error.mp3' %}"></audio>
+            <audio id="mainmenu-audio" src="{% static 'mainmenu.mp3' %}"></audio>
+
+
             <div class="alert" id="alert">
                 Room name empty
                 <span class="closebtn" onclick="this.parentElement.style.visibility='hidden';">X</span>
@@ -42,6 +48,20 @@
 
 
     <script>
+
+
+        function playMusic() {
+            mainmenu = document.getElementById('mainmenu-audio')
+            mainmenu.play()
+
+        }
+
+        function stopMusic() {
+            mainmenu = document.getElementById('mainmenu-audio')
+            mainmenu.pause()
+
+        }
+
         document.querySelector('#room-name-input').focus();
         document.querySelector('#room-name-input').onkeyup = function (e) {
             if (e.keyCode === 13) {  // enter, return
@@ -54,8 +74,21 @@
 
             if (roomName === '') {
                 console.log('room name empty');
+                audio = document.getElementById("audio")
+                audio.play()
 
-                document.getElementById('alert').style.visibility = 'visible'
+
+
+                setTimeout(alertpls, 100)
+
+                function alertpls() {
+                    alertarea = document.getElementById('alert')
+                    alertarea.style.visibility = 'visible'
+
+
+                }
+
+
             } else {
                 window.location.pathname = '/chat/' + roomName + '/';
 

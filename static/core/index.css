@@ -15,6 +15,30 @@ body{
     text-align: center;
 
 }
+@keyframes titlecolor {
+    0%   {background-color:red; left:0px; top:0px;}
+  25%  {background-color:yellow; left:200px; top:0px;}
+  50%  {background-color:blue; left:200px; top:200px;}
+  75%  {background-color:green; left:0px; top:200px;}
+  100% {background-color:red; left:0px; top:0px;}
+}
+.music{
+    display: flex;
+    justify-content: flex-end;
+    height: 30px;
+}
+
+.music img{
+    cursor: pointer;
+}
+
+.music img:hover{
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
+    cursor: pointer;
+}
+
 .container{
     margin-top: 20px;
     display: flex;
@@ -43,6 +67,10 @@ body{
     align-items: center;
     justify-content: space-between;
     width: 500px;
+    animation: shake 0.5s;
+    animation-iteration-count: infinite;
+    animation-timing-function: ease-in;
+    cursor: pointer;
 }
 .closebtn{
     cursor: pointer;
@@ -52,7 +80,26 @@ body{
     margin-top: 10px;
     display: flex;
     visibility: hidden;
+   
 }
+.alert:hover {
+    background-color: red;
+  }
+
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+  }
+
 /* CSS  choreko button*/
 .button-50 {
     appearance: button;
