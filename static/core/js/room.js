@@ -16,20 +16,30 @@ const chatSocket = new WebSocket(
 
 chatSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
-    document.querySelector('#chat-log').innerHTML += ('<div class="message">' + '[' + data.user + ']- ' + data.message + ' ' + '</div>');
 
-    console.log('hello' + data.quiz)
+    console.log(data.info)
 
-    const elem = document.getElementById('chat-log')
-    elem.scrollTop = elem.scrollHeight;
+    if (data.info === 'chat') {
+        document.querySelector('#chat-log').innerHTML += ('<div class="message">' + '[' + data.user + ']- ' + data.message + ' ' + '</div>');
+
+        console.log(data.command)
+
+        const elem = document.getElementById('chat-log')
+        elem.scrollTop = elem.scrollHeight;
 
 
-    if (data.user === currentuser.username) {
-        console.log('oh no')
+        if (data.user === currentuser.username) {
+            console.log('oh no')
 
+        } else {
+            messageaudio.play()
+        }
     } else {
-        messageaudio.play()
+        console.log('quiz')
+        console.log(data.msg)
+        console.log(data.quizname)
     }
+
 };
 
 chatSocket.onclose = function (e) {
@@ -50,9 +60,12 @@ document.querySelector('#chat-message-submit').onclick = function (e) {
     const user = JSON.parse(localStorage.getItem("username"))
 
     chatSocket.send(JSON.stringify({
+        'request_type': 'chat',
         'message': message,
-        'user': user.username
-    }));
+        'user': user.username,
+        'command': 'ok'
+    }))
+
     messageInputDom.value = '';
 };
 
@@ -66,4 +79,11 @@ function showusername() {
 
 
 
+}
+
+function sendCommand() {
+    chatSocket.send(JSON.stringify({
+        'request_type': 'quiz',
+        'newmsg': 'ok'
+    }));
 }
