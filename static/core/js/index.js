@@ -18,8 +18,8 @@ function setUsername() {
 
 function playHoverAudio() {
     hoveraudio.play()
-    console.log('something')
 }
+
 
 function musicVolume() {
     var volumevalue = document.getElementById('slider').value
@@ -59,7 +59,11 @@ document.querySelector('#room-name-input').onkeyup = function (e) {
         document.querySelector('#room-name-submit').click();
     }
 };
-
+document.querySelector('#user-name-input').onkeyup = function (e) {
+    if (e.keyCode === 13) {  // enter, return
+        document.querySelector('#room-name-submit').click();
+    }
+};
 document.querySelector('#room-name-submit').onclick = function (e) {
     var roomName = document.querySelector('#room-name-input').value;
     const username = document.querySelector('#user-name-input').value

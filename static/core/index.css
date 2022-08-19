@@ -4,8 +4,20 @@
 
 body{
     background: #7fe17d;
+    animation: colorbody 20s infinite linear;
+
+    
 
 }
+@keyframes colorbody {
+  0%   { background: #33CCCC; }
+  20%  { background: #33CC36; }
+  40%  { background: #B8CC33; }
+  60%  { background: #FCCA00; }
+  80%  { background: #33CC36; }
+  100% { background: #33CCCC; }
+}
+
 .gametitle{
     font-family: 'Silkscreen', cursive;
     font-size: 50px;
@@ -64,14 +76,25 @@ body{
   animation-timing-function: ease-in-out;
 }
 .container input{
-    outline: none;
     padding: 10px;
-    border: 1px solid green;
     font-family: 'Roboto', sans-serif;
     font-weight: 600;
     font-size: 15px;
     text-align: start;
     width: 400px;
+    outline: none;
+
+
+}
+.container .only-input{
+  background-color: none;
+  background: #7fe17d;
+  outline: none;
+  border: 0;
+  animation: colorbody 20s infinite linear;
+  border-bottom: 1px solid gray;
+  border-radius: 20px;
+
 
 }
 .alert{
