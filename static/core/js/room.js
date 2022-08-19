@@ -17,7 +17,6 @@ const chatSocket = new WebSocket(
 chatSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
 
-    console.log(data.info)
 
     if (data.info === 'chat') {
         document.querySelector('#chat-log').innerHTML += ('<div class="message">' + '[' + data.user + ']- ' + data.message + ' ' + '</div>');
@@ -29,15 +28,23 @@ chatSocket.onmessage = function (e) {
 
 
         if (data.user === currentuser.username) {
-            console.log('oh no')
+            console.log('i sent messege')
 
         } else {
             messageaudio.play()
         }
     } else {
-        console.log('quiz')
-        console.log(data.msg)
-        console.log(data.quizname)
+
+        console.log(data.question)
+
+        let answers = data.answer
+        console.log(JSON.parse(answers))
+
+
+
+        // answers.map = (answer) => {
+        //     document.querySelector('.options').innerHTML += '<div class="option">' + answer + '</div>'
+        // }
     }
 
 };
@@ -74,7 +81,6 @@ function showusername() {
 
     const username = JSON.parse(localStorage.getItem("username"))
 
-    console.log(username.username)
     document.querySelector('#user-name-box').innerHTML = ('Welcome, ' + username.username)
 
 
@@ -85,5 +91,6 @@ function sendCommand() {
     chatSocket.send(JSON.stringify({
         'request_type': 'quiz',
         'newmsg': 'ok'
+
     }));
 }

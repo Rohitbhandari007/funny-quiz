@@ -85,17 +85,64 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def get_data_models(self):
         quiz = Quiz.objects.filter(id=1)
         quizname = quiz[0].name
-
         return quizname
+
+    def get_questions(self):
+        quiz = Quiz.objects.filter(id=1)
+        questions = Question.objects.filter(quiz__in=quiz)
+        single_question= questions[0].text
+        return single_question
+    
+    def get_answers(self):
+        quiz = Quiz.objects.filter(id=1)
+        questions = Question.objects.filter(quiz__in=quiz).values()
+        quest = Question.objects.get(id=1)
+        print(quest)
+        answer = Answer.objects.filter(question=quest)
+        
+        return "answer"
+    
+    def get_ans(self):
+        quest = Question.objects.get(id=1)
+
+        anss = []
+        correct=[]
+
+        for answer in Answer.objects.filter(question=quest):
+            # answers.update['text'] = answer.text
+            anss.append(answer.text)
+            correct.append(answer.correct)
+            # answer['correct'] = answer.correct
+
+        # self.get_ans = [
+        #     {
+        #         'one':x.text,
+        #         'two':x.text,
+        #         'three':x.text,
+        #         'four':x.text
+        #     }
+        #     for x in Answer.objects.filter(question=quest)
+        # ]
+
+        print(anss)
+
+        ans_dict = dict(zip(anss, correct))
+        answers = json.dumps(ans_dict)
+        return answers
 
     async def quiz_info(self, event):
         quiz = await database_sync_to_async(self.get_data_models)()
+        question = await database_sync_to_async(self.get_questions)()
+        answer = await database_sync_to_async(self.get_ans)()
+        
         # questions = Question.objects.filter(quiz__in=quiz)
         # answers = Answer.objects.filter(question__in=questions)
 
         await self.send(text_data=json.dumps({
             'info' :'quiz',
             'msg':'hello',
-            'quizname': quiz
+            'quizname': quiz,
+            'question':question,
+            'answer':answer
             
         }))
