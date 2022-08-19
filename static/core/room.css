@@ -13,6 +13,11 @@ body {
     text-align: center;
 
 }
+.user-name-box{
+  font-family: 'DynaPuff', cursive;
+  font-size: 20px;
+  margin-left: 20px;
+}
 @keyframes titlecolor {
     0%   {background-color:red; left:0px; top:0px;}
   25%  {background-color:yellow; left:200px; top:0px;}

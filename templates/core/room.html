@@ -8,9 +8,11 @@
     <title>Chat Room</title>
 </head>
 
-<body>
+<body onload="showusername()">
     <div class="gametitle">
         funny QUIZ
+    </div>
+    <div class="user-name-box" id="user-name-box">
     </div>
     <div class="container">
 
@@ -41,42 +43,10 @@
 
     {{ room_name|json_script:"room-name" }}
     <script>
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
 
-
-        const chatSocket = new WebSocket(
-            'ws://'
-            + window.location.host
-            + '/ws/chat/'
-            + roomName
-            + '/'
-        );
-
-        chatSocket.onmessage = function (e) {
-            const data = JSON.parse(e.data);
-            document.querySelector('#chat-log').innerHTML += ('- ' + data.message + '<br>');
-        };
-
-        chatSocket.onclose = function (e) {
-            console.error('Chat socket closed unexpectedly');
-        };
-
-        document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function (e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#chat-message-submit').click();
-            }
-        };
-
-        document.querySelector('#chat-message-submit').onclick = function (e) {
-            const messageInputDom = document.querySelector('#chat-message-input');
-            const message = messageInputDom.value;
-            chatSocket.send(JSON.stringify({
-                'message': message
-            }));
-            messageInputDom.value = '';
-        };
     </script>
+    <script src="{% static 'core/js/room.js' %}"></script>
+
 </body>
 
 </html>

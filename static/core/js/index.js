@@ -2,6 +2,20 @@ var musicplaying = false;
 
 const hoveraudio = document.getElementById('hover-audio')
 
+
+function setUsername() {
+    const username = document.querySelector('#user-name-input').value
+
+    let obj = {
+        'username': username
+    }
+    localStorage.setItem("username", JSON.stringify(obj))
+
+
+    let newuserval = JSON.parse(localStorage.getItem('username'))
+    console.log(newuserval)
+}
+
 function playHoverAudio() {
     hoveraudio.play()
     console.log('something')
@@ -48,12 +62,13 @@ document.querySelector('#room-name-input').onkeyup = function (e) {
 
 document.querySelector('#room-name-submit').onclick = function (e) {
     var roomName = document.querySelector('#room-name-input').value;
+    const username = document.querySelector('#user-name-input').value
 
-    if (roomName === '') {
+
+    if (roomName === '' | username === '') {
         console.log('room name empty');
         audio = document.getElementById("audio")
         audio.play()
-
 
 
         setTimeout(alertpls, 100)
@@ -67,6 +82,7 @@ document.querySelector('#room-name-submit').onclick = function (e) {
 
 
     } else {
+        setUsername()
         window.location.pathname = '/chat/' + roomName + '/';
 
     }
