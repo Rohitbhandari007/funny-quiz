@@ -1,144 +1,46 @@
+{% extends "core/base.html" %}
 {% load static %}
+{% block content %}
 
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="{% static 'core/index.css' %}">
-    <!-- CSS only -->
-
-
-    <title>Chat Rooms</title>
-</head>
-
-<body>
-
-    <audio loop id="audio" src="{% static 'error.mp3' %}"></audio>
-    <audio id="mainmenu-audio" src="{% static 'mainmenu.mp3' %}"></audio>
-    <audio id="hover-audio" src="{% static 'bubble.mp3' %}"></audio>
+<audio loop id="audio" src="{% static 'error.mp3' %}"></audio>
+<audio id="mainmenu-audio" src="{% static 'mainmenu.mp3' %}"></audio>
+<audio id="hover-audio" src="{% static 'bubble.mp3' %}"></audio>
 
 
 
-    <div class="gametitle">
-        funny QUIZ
-    </div>
-    <div class="music">
-        <img src="{% static 'volume.png' %}" class="'volicon" onclick={toggleMusic()}></img>
-        <div class="slidercontainer">
-            <input type="range" min="1" max="100" id="slider" value="50" class="slider" onchange="musicVolume()">
+
+<div class="container">
+
+    <label class="label-room">
+
+        Enter room name
+    </label>
+    <input id="room-name-input" type="text" size="100" required><br>
+
+    <label class="label-user">
+
+        Enter Username
+    </label>
+    <input id="user-name-input" type="text" size="100" required><br>
+
+    <input class='button-30' id="room-name-submit" type="button" value="Enter" onmouseover="playHoverAudio()">
+
+    <div class="errormsg" id="'errormsg">
+
+
+
+        <div class="alert" id="alert">
+            Room name empty
+            <span class="closebtn" onclick="this.parentElement.style.visibility='hidden'; stopErrorMusic()">X</span>
         </div>
-
-    </div>
-    <div class="container">
-
-        <label class="label-room">
-
-            Enter room name
-        </label>
-        <input id="room-name-input" type="text" size="100" required><br>
-
-        <label class="label-user">
-
-            Enter Username
-        </label>
-        <input id="user-name-input" type="text" size="100" required><br>
-
-        <input class='button-30' id="room-name-submit" type="button" value="Enter" onmouseover="playHoverAudio()">
-
-        <div class="errormsg" id="'errormsg">
-
-
-
-            <div class="alert" id="alert">
-                Room name empty
-                <span class="closebtn" onclick="this.parentElement.style.visibility='hidden'; stopErrorMusic()">X</span>
-            </div>
-        </div>
-
     </div>
 
+</div>
 
 
 
 
 
-    <script>
 
-        var musicplaying = false;
-
-        const hoveraudio = document.getElementById('hover-audio')
-
-        function playHoverAudio() {
-            hoveraudio.play()
-            console.log('something')
-        }
-
-        function musicVolume() {
-            var volumevalue = document.getElementById('slider').value
-            mainmenu = document.getElementById('mainmenu-audio')
-            console.log(volumevalue)
-            var newvolume = volumevalue / 100;
-            console.log(newvolume)
-            mainmenu.volume = newvolume;
-
-        }
-
-        function playMusic() {
-            mainmenu = document.getElementById('mainmenu-audio')
-            mainmenu.play()
-            musicplaying = true;
-
-        }
-
-        function stopMusic() {
-            mainmenu = document.getElementById('mainmenu-audio')
-            mainmenu.pause()
-            musicplaying = false;
-
-        }
-
-        function stopErrorMusic() {
-            document.getElementById('audio').pause()
-        }
-
-        function toggleMusic() {
-            musicplaying ? stopMusic() : playMusic()
-        }
-
-        document.querySelector('#room-name-input').focus();
-        document.querySelector('#room-name-input').onkeyup = function (e) {
-            if (e.keyCode === 13) {  // enter, return
-                document.querySelector('#room-name-submit').click();
-            }
-        };
-
-        document.querySelector('#room-name-submit').onclick = function (e) {
-            var roomName = document.querySelector('#room-name-input').value;
-
-            if (roomName === '') {
-                console.log('room name empty');
-                audio = document.getElementById("audio")
-                audio.play()
-
-
-
-                setTimeout(alertpls, 100)
-
-                function alertpls() {
-                    alertarea = document.getElementById('alert')
-                    alertarea.style.visibility = 'visible'
-
-
-                }
-
-
-            } else {
-                window.location.pathname = '/chat/' + roomName + '/';
-
-            }
-        };
-    </script>
-</body>
-
-</html>
+<script src="{% static 'core/js/index.js' %}"></script>
+{% endblock content %}
