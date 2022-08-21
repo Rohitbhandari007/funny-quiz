@@ -19,7 +19,7 @@ chatSocket.onmessage = function (e) {
 
 
     if (data.info === 'chat') {
-        document.querySelector('#chat-log').innerHTML += ('<div class="message">' + '[' + data.user + ']- ' + data.message + ' ' + '</div>');
+        document.querySelector('#chat-log').innerHTML += ('<div class="message" onclick="pickanswer()">' + '[' + data.user + ']- ' + data.message + ' ' + '</div>');
 
         console.log(data.command)
 
@@ -33,18 +33,55 @@ chatSocket.onmessage = function (e) {
         } else {
             messageaudio.play()
         }
-    } else {
+    } else if (data.info === 'quiz') {
 
-        console.log(data.question)
 
         let answers = data.answer
-        console.log(JSON.parse(answers))
+
+        let ans = JSON.parse(answers)
+        let a = 0
+
+        const options = document.querySelector('.options')
+
+        Object.keys(ans).forEach(function (key) {
+            // console.log(key, ans[key]);
+            a = a + 1
+            let opt = document.createElement('li')
+            opt.innerHTML += a + '' + key
+            opt.value += ans[key]
+            options.appendChild(opt)
+            // document.querySelector('.options').innerHTML += '<div class="option">' + a + ' ' + key + '</div>'
+
+        })
+
+        document.querySelector('.question').innerHTML = data.question
+
+        //this function loops through childs created inside options
+        for (var child = options.firstChild; child !== null; child = child.nextSibling) {
+            let child_value = child.value
+            child.onclick = function () {
+                // 1 means true and 0 is false
+                if (child_value === 1) {
+                    chatSocket.send(JSON.stringify({
+                        'request_type': 'answer',
+                        'user_answer': 'correct',
+                        'user_name': currentuser.username
+                    }))
+                    nextQuestion();
+                } else {
+                    console.log('incorrect')
+                }
+            };
+        }
 
 
 
-        // answers.map = (answer) => {
-        //     document.querySelector('.options').innerHTML += '<div class="option">' + answer + '</div>'
-        // }
+
+    } else if (data.info === 'answer') {
+        console.log(data.message)
+        console.log(data.user_name)
+    } else if (data.info === 'next') {
+        console.log(data.user_name)
     }
 
 };
@@ -93,4 +130,18 @@ function sendCommand() {
         'newmsg': 'ok'
 
     }));
+}
+
+
+function pickanswer() {
+    console.log('hello')
+}
+
+function nextQuestion() {
+    console.log('click')
+    chatSocket.send(JSON.stringify({
+        'request_type': 'next',
+        'user_name': 'me'
+    }))
+
 }

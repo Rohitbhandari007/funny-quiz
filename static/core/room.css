@@ -53,6 +53,14 @@ body {
     .options{
         margin-left: 100px;
     }
+    .options p{
+      border: 1px solid gray;
+        margin: 10px;
+        border-radius: 10px;
+        background-color: yellow;
+        padding: 10px;
+        cursor: pointer;
+    }
     .option{
         border: 1px solid gray;
         margin: 10px;
