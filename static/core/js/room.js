@@ -37,6 +37,10 @@ chatSocket.onmessage = function (e) {
 
 
         let answers = data.answer
+        let pattern = data.pattern
+        let qid = data.qid
+        console.log(qid)
+        localStorage.setItem("pattern", JSON.stringify(pattern))
 
         let ans = JSON.parse(answers)
         let a = 0
@@ -82,6 +86,7 @@ chatSocket.onmessage = function (e) {
         console.log(data.user_name)
     } else if (data.info === 'next') {
         console.log(data.user_name)
+        console.log(data.pattern)
     }
 
 };
@@ -141,7 +146,9 @@ function nextQuestion() {
     console.log('click')
     chatSocket.send(JSON.stringify({
         'request_type': 'next',
-        'user_name': 'me'
+        'user_name': 'next question logic',
+        'pattern': localStorage.getItem('pattern'),
+        'qid': localStorage.getItem('qid')
     }))
 
 }

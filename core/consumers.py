@@ -6,6 +6,8 @@ from django.core import serializers
 from channels.db import database_sync_to_async
 import random
 
+from .utils import QuestionFunction, QuestionCheck, QuestionConfirm
+
 
 #some global code
 
@@ -87,14 +89,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if request_type=='next':
                 
             user_name=text_data_json['user_name']
+            pattern=text_data_json['pattern']
+            qid=text_data_json['qid']
+            
 
-            print(user_name)
 
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'next_question',
-                    'user_name':user_name
+                    'user_name':user_name,
+                    'pattern':pattern,
+                    'qid':qid
                             
                 
                 }
@@ -123,6 +129,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
     def get_random_question(self):
         quiz = Quiz.objects.filter(id=1)
         questions = Question.objects.filter(quiz__in=quiz)
+
+        
         q_count = questions.count()
 
 #craeting array for answers and cirrect
@@ -131,6 +139,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         
         pattern = random.sample(range(0, q_count), q_count)
+        
         for x in pattern:
             single_question= questions[x].text
             question_id = questions[x].id
@@ -151,13 +160,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     def get_next_question(self):
         
-        return 'hello'
+       
+        quiz = Quiz.objects.filter(id=1)
+        questions = Question.objects.filter(quiz__in=quiz)
+  
+
+        
+
+        return questions
 
     async def quiz_info(self, event):
         quiz = await database_sync_to_async(self.get_data_models)()
         q = await database_sync_to_async(self.get_random_question)()
         quest = q[0]
+        qid=q[1]
         ans = q[2]
+        pattern = q[3]
         
 
         # questions = Question.objects.filter(quiz__in=quiz)
@@ -168,7 +186,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'msg':'hello',
             'quizname': quiz,
             'question':quest,
-            'answer':ans
+            'answer':ans,
+            'pattern':pattern,
+            'qid':qid,
             
         }))
     
@@ -184,13 +204,46 @@ class ChatConsumer(AsyncWebsocketConsumer):
     
 
     async def next_question(self, event):
-        question =  await database_sync_to_async(self.get_next_question)()
-        print(question)
+        questions =  await database_sync_to_async(self.get_next_question)()
+        pattern=event['pattern']
+        arr = pattern
+        print(arr)
+        qid=event['qid']
 
+
+
+
+        print(qid, pattern)
+
+        for x in arr:
+            print (x)
+            # if arr[x] == qid:
+            #     print('false')
+            # return 'never gonna happen'
+
+        
+        # if qid in arr:
+        #     for x in arr:
+        #         print(x)
+
+        # # question = q_obj
+
+        
+        # for x in pattern:
+        #     q_obj=questions[x]
+        
+        # new_quest = q_obj
+
+        # print(new_quest)
+
+        
+
+     
         user_name = event['user_name']
         await self.send(text_data=json.dumps({
             'info':'next',
             'message': 'this is next quest',
-            'user_name':user_name
+            'user_name':user_name,
+            'pattern':pattern
             
         }))
