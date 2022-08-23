@@ -161,44 +161,57 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
         quiz = Quiz.objects.filter(id=1)
         questions = Question.objects.filter(quiz__in=quiz)
+        a_obj = Answer.objects.all()
 
         q_arr = []
         qids = []
         q_obj=[]
+
+
         ans_arr=[]
         ans_correct=[]
 
-        q_n = []
+        #getting all answers 
+        new_ans_arr =[]
+        new_ans_parent = []
+        new_ans_correct = []
+        new_ans_arr_obj=[]
 
+        for ans in a_obj:
+            new_ans_arr.append(ans.text)
+            new_ans_parent.append(ans.question)
+            new_ans_correct.append(ans.correct)
+            new_ans_arr_obj.append(ans)
+
+            
+
+
+        q_n = []
+        a=0
         for x in questions:
+            a=a+1
             q_arr.append(x.text)
             qids.append(x.id)
             q_obj.append(x)
+            question = x
             
-        answers = Answer.objects.filter(question=x)
+            answers = Answer.objects.filter(question=question)
 
         for answer in answers:
             ans_arr.append(answer.text)
             ans_correct.append(answer.correct)
             q_n.append(answer.question)
-
-            
         
-       
-        print(q_n[0])
-
-        
-
         ans_new_dict = dict(zip(ans_arr, ans_correct))
   
-        return q_obj, q_arr, qids, ans_new_dict, q_n
+        return q_obj, q_arr, qids, ans_new_dict, q_n, new_ans_arr_obj
 
 
     def get_answer_next(self):
         answers = Answer.objects.all()
+        nice = 0
 
-
-        return answers
+        return answers, nice
 
     async def quiz_info(self, event):
         quiz = await database_sync_to_async(self.get_data_models)()
@@ -243,15 +256,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         p=pattern.replace(',','')
         p = list(p)
         
-        
         objs=q_objects[0]
-        q_n = q_objects[4]
 
-
-        for parent_q in q_n:
-            print(parent_q)
-
-        answers =q_objects[3]
         
         if qid in p:
             p.remove(qid)
@@ -270,32 +276,26 @@ class ChatConsumer(AsyncWebsocketConsumer):
         q_obj = objs[int(q_id)]
 
 
-        @database_sync_to_async
-        def get_ans():
-            answers_next = Answer.objects.filter(question=q_obj) 
-            return answers_next
-
-        new_ans = await get_ans()
-        print(new_ans)
-
-        # def call_ans():
-        #     function = get_ans()
-
-        #     return function
-
-        # new_answer = call_ans()
-
-        # print(new_answer)
-        # new_data = async_to_sync(ans_objects.filter(question=q_obj))
-        # print(new_data)
+        new_ans_obj = q_objects[5]
 
 
+        new_ans_text = []
+        new_ans_correct = []
+
+        for ans_obj in new_ans_obj:
+            
+            ans_parent = ans_obj.question
+
+            if ans_parent == q_obj:
+                new_ans_text.append(ans_obj.text)
+                new_ans_correct.append(ans_obj.correct)
+        
+                ans_new_dict = dict(zip(new_ans_text, new_ans_correct))
 
 
         
-        
-        print(q_n)
-        print(answers)
+        print(q_name)
+        print(ans_new_dict)
      
         user_name = event['user_name']
         await self.send(text_data=json.dumps({
@@ -306,6 +306,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'new_pattern':p,
             'q_name':q_name,
             'q_id':q_id,
-            'answers':answers,
+            'answers':ans_new_dict,
             
         }))

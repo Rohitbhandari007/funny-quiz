@@ -90,6 +90,7 @@ chatSocket.onmessage = function (e) {
 
         let q_name = data.q_name
         let ans = data.answers
+        console.log(ans)
 
 
         console.log(q_name)
@@ -101,6 +102,7 @@ chatSocket.onmessage = function (e) {
 
 
         const options = document.querySelector('.options')
+        options.innerHTML = " ";
 
 
         let a = 0
@@ -109,8 +111,7 @@ chatSocket.onmessage = function (e) {
             a = a + 1
 
             let opt = document.createElement('li')
-
-            opt.innerHTML += a + '' + key
+            opt.innerHTML += '' + key
             opt.value += ans[key]
             options.appendChild(opt)
             // document.querySelector('.options').innerHTML += '<div class="option">' + a + ' ' + key + '</div>'
