@@ -1,12 +1,11 @@
 import json
 from channels.generic.websocket import WebsocketConsumer, AsyncWebsocketConsumer, AsyncJsonWebsocketConsumer
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
 from .models import *
 from django.core import serializers
 from channels.db import database_sync_to_async
 import random
 
-from .utils import QuestionFunction, QuestionCheck, QuestionConfirm
 
 
 #some global code
@@ -160,14 +159,46 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     def get_next_question(self):
         
-       
         quiz = Quiz.objects.filter(id=1)
         questions = Question.objects.filter(quiz__in=quiz)
-  
+
+        q_arr = []
+        qids = []
+        q_obj=[]
+        ans_arr=[]
+        ans_correct=[]
+
+        q_n = []
+
+        for x in questions:
+            q_arr.append(x.text)
+            qids.append(x.id)
+            q_obj.append(x)
+            
+        answers = Answer.objects.filter(question=x)
+
+        for answer in answers:
+            ans_arr.append(answer.text)
+            ans_correct.append(answer.correct)
+            q_n.append(answer.question)
+
+            
+        
+       
+        print(q_n[0])
 
         
 
-        return questions
+        ans_new_dict = dict(zip(ans_arr, ans_correct))
+  
+        return q_obj, q_arr, qids, ans_new_dict, q_n
+
+
+    def get_answer_next(self):
+        answers = Answer.objects.all()
+
+
+        return answers
 
     async def quiz_info(self, event):
         quiz = await database_sync_to_async(self.get_data_models)()
@@ -203,47 +234,78 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
     
 
+    
     async def next_question(self, event):
-        questions =  await database_sync_to_async(self.get_next_question)()
+        q_objects =  await database_sync_to_async(self.get_next_question)()
         pattern=event['pattern']
-        arr = pattern
-        print(arr)
         qid=event['qid']
 
+        p=pattern.replace(',','')
+        p = list(p)
+        
+        
+        objs=q_objects[0]
+        q_n = q_objects[4]
 
 
+        for parent_q in q_n:
+            print(parent_q)
 
-        print(qid, pattern)
-
-        for x in arr:
-            print (x)
-            # if arr[x] == qid:
-            #     print('false')
-            # return 'never gonna happen'
+        answers =q_objects[3]
+        
+        if qid in p:
+            p.remove(qid)
+            for x in p:
+                x=int(x)
+                q_obj = objs[x]
+                q_name= objs[x].text
+                q_id=objs[x].id
+            
+        for q_id in p:
+            q_id =q_id
 
         
-        # if qid in arr:
-        #     for x in arr:
-        #         print(x)
+        print(q_id)
+        q_name = objs[int(q_id)].text
+        q_obj = objs[int(q_id)]
 
-        # # question = q_obj
+
+        @database_sync_to_async
+        def get_ans():
+            answers_next = Answer.objects.filter(question=q_obj) 
+            return answers_next
+
+        new_ans = await get_ans()
+        print(new_ans)
+
+        # def call_ans():
+        #     function = get_ans()
+
+        #     return function
+
+        # new_answer = call_ans()
+
+        # print(new_answer)
+        # new_data = async_to_sync(ans_objects.filter(question=q_obj))
+        # print(new_data)
+
+
+
 
         
-        # for x in pattern:
-        #     q_obj=questions[x]
         
-        # new_quest = q_obj
-
-        # print(new_quest)
-
-        
-
+        print(q_n)
+        print(answers)
      
         user_name = event['user_name']
         await self.send(text_data=json.dumps({
             'info':'next',
             'message': 'this is next quest',
             'user_name':user_name,
-            'pattern':pattern
+            'pattern':pattern,
+            'new_pattern':p,
+            'q_name':q_name,
+            'q_id':q_id,
+            'answers':answers,
             
         }))

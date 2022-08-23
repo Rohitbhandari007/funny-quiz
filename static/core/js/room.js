@@ -38,9 +38,11 @@ chatSocket.onmessage = function (e) {
 
         let answers = data.answer
         let pattern = data.pattern
+        console.log(pattern)
         let qid = data.qid
         console.log(qid)
-        localStorage.setItem("pattern", JSON.stringify(pattern))
+        localStorage.setItem("pattern", pattern)
+        localStorage.setItem('qid', qid)
 
         let ans = JSON.parse(answers)
         let a = 0
@@ -85,8 +87,58 @@ chatSocket.onmessage = function (e) {
         console.log(data.message)
         console.log(data.user_name)
     } else if (data.info === 'next') {
-        console.log(data.user_name)
-        console.log(data.pattern)
+
+        let q_name = data.q_name
+        let ans = data.answers
+
+
+        console.log(q_name)
+        console.log(data.q_id)
+
+        localStorage.setItem('pattern', data.new_pattern)
+        localStorage.setItem('qid', data.q_id)
+        document.querySelector('.question').innerHTML = q_name
+
+
+        const options = document.querySelector('.options')
+
+
+        let a = 0
+        Object.keys(ans).forEach(function (key) {
+            // console.log(key, ans[key]);
+            a = a + 1
+
+            let opt = document.createElement('li')
+
+            opt.innerHTML += a + '' + key
+            opt.value += ans[key]
+            options.appendChild(opt)
+            // document.querySelector('.options').innerHTML += '<div class="option">' + a + ' ' + key + '</div>'
+
+        })
+
+
+        //this function loops through childs created inside options
+        for (var child = options.firstChild; child !== null; child = child.nextSibling) {
+            let child_value = child.value
+            child.onclick = function () {
+                // 1 means true and 0 is false
+                if (child_value === 1) {
+                    chatSocket.send(JSON.stringify({
+                        'request_type': 'answer',
+                        'user_answer': 'correct',
+                        'user_name': currentuser.username
+                    }))
+                    nextQuestion();
+                } else {
+                    console.log('incorrect')
+                }
+            };
+        }
+
+
+
+
     }
 
 };
@@ -144,6 +196,7 @@ function pickanswer() {
 
 function nextQuestion() {
     console.log('click')
+    console.log(localStorage.getItem('qid'))
     chatSocket.send(JSON.stringify({
         'request_type': 'next',
         'user_name': 'next question logic',
