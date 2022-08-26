@@ -14,17 +14,30 @@
     <div class="gametitle">
         funny QUIZ
     </div>
-    <button onclick="sendCommand()">Button</button>
-    <div class="user-name-box" id="user-name-box">
+    <div class="name-btn-container">
+        <div class="user-name-box" id="user-name-box">
+        </div>
+        <button onclick="sendCommand()" class="restart-button">Restart</button>
     </div>
+
+
     <div class="container">
 
 
         <div class="gamecontainer">
-            <div class="question">1. What is your name ?</div>
+            <div class="question"></div>
             <div class="options">
             </div>
+
+            <div class="errormsg">
+                <div class="alert" id="alert">
+                    Incorrect answer
+                    <span class="closebtn" onclick="this.parentElement.style.visibility='hidden';">Ok</span>
+                </div>
+            </div>
+
         </div>
+
 
         <div class="chatcontainer">
 

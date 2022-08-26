@@ -55,6 +55,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
 
+
+        if request_type=='join':
+            username = text_data_json['username']
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    'type': 'join_game',
+                    'username':username
+                    
+                    
+                }
+            )
         #send command ok    
         if request_type=='quiz':
             newmsg = text_data_json['newmsg']
@@ -104,6 +117,14 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 
                 }
                 )
+
+    async def join_game(self, event):
+        username = event['username']
+
+        await self.send(text_data=json.dumps({
+            'info':'join_game',
+           'username':username, 
+        }))
 
     async def chat_message(self, event):
         message = event['message']
@@ -182,10 +203,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             new_ans_parent.append(ans.question)
             new_ans_correct.append(ans.correct)
             new_ans_arr_obj.append(ans)
-
-            
-
-
         q_n = []
         a=0
         for x in questions:
@@ -220,11 +237,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
         qid=q[1]
         ans = q[2]
         pattern = q[3]
-        
-
-        # questions = Question.objects.filter(quiz__in=quiz)
-        # answers = Answer.objects.filter(question__in=questions)
-
         await self.send(text_data=json.dumps({
             'info' :'quiz',
             'msg':'hello',
@@ -252,6 +264,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         q_objects =  await database_sync_to_async(self.get_next_question)()
         pattern=event['pattern']
         qid=event['qid']
+        print(qid)
 
         p=pattern.replace(',','')
         p = list(p)
@@ -261,6 +274,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
         
         if qid in p:
             p.remove(qid)
+            print(p)
+
             for x in p:
                 x=int(x)
                 q_obj = objs[x]
@@ -270,13 +285,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
         for q_id in p:
             q_id =q_id
 
-        
-        print(q_id)
         q_name = objs[int(q_id)].text
         q_obj = objs[int(q_id)]
 
 
         new_ans_obj = q_objects[5]
+
 
 
         new_ans_text = []

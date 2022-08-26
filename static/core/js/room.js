@@ -1,5 +1,5 @@
 const roomName = JSON.parse(document.getElementById('room-name').textContent);
-
+const alertarea = document.getElementById('alert')
 const messageaudio = document.getElementById('message-audio')
 let currentuser = JSON.parse(localStorage.getItem("username"))
 
@@ -14,8 +14,16 @@ const chatSocket = new WebSocket(
     + '/'
 );
 
+chatSocket.onopen = function (e) {
+    chatSocket.send(JSON.stringify({
+        'request_type': 'join',
+        'username': currentuser
+    }))
+}
+
 chatSocket.onmessage = function (e) {
     const data = JSON.parse(e.data);
+
 
 
     if (data.info === 'chat') {
@@ -35,28 +43,29 @@ chatSocket.onmessage = function (e) {
         }
     } else if (data.info === 'quiz') {
 
-
         let answers = data.answer
         let pattern = data.pattern
-        console.log(pattern)
         let qid = data.qid
-        console.log(qid)
+
+
+        console.log(pattern, qid)
+
         localStorage.setItem("pattern", pattern)
         localStorage.setItem('qid', qid)
+
 
         let ans = JSON.parse(answers)
         let a = 0
 
         const options = document.querySelector('.options')
+        options.innerHTML = ''
 
         Object.keys(ans).forEach(function (key) {
-            // console.log(key, ans[key]);
             a = a + 1
             let opt = document.createElement('li')
-            opt.innerHTML += a + '' + key
+            opt.innerHTML += '' + key
             opt.value += ans[key]
             options.appendChild(opt)
-            // document.querySelector('.options').innerHTML += '<div class="option">' + a + ' ' + key + '</div>'
 
         })
 
@@ -76,6 +85,8 @@ chatSocket.onmessage = function (e) {
                     nextQuestion();
                 } else {
                     console.log('incorrect')
+
+
                 }
             };
         }
@@ -84,13 +95,26 @@ chatSocket.onmessage = function (e) {
 
 
     } else if (data.info === 'answer') {
-        console.log(data.message)
-        console.log(data.user_name)
-    } else if (data.info === 'next') {
+        console.log(data.message + ' by "' + data.user_name + '"')
+
+    } else if (data.info === 'join_game') {
+
+        username = data.username.username
+        console.log(username.username)
+
+        let message = 'Just joined'
+        chatSocket.send(JSON.stringify({
+            'request_type': 'chat',
+            'message': message,
+            'user': username,
+            'command': 'ok'
+        }))
+    }
+
+    else if (data.info === 'next') {
 
         let q_name = data.q_name
         let ans = data.answers
-        console.log(ans)
 
 
         console.log(q_name)
@@ -114,7 +138,6 @@ chatSocket.onmessage = function (e) {
             opt.innerHTML += '' + key
             opt.value += ans[key]
             options.appendChild(opt)
-            // document.querySelector('.options').innerHTML += '<div class="option">' + a + ' ' + key + '</div>'
 
         })
 
@@ -133,6 +156,10 @@ chatSocket.onmessage = function (e) {
                     nextQuestion();
                 } else {
                     console.log('incorrect')
+                    function alertgenerate() {
+                        alertarea.style.visibility = 'visible'
+                    }
+                    alertgenerate()
                 }
             };
         }
@@ -173,12 +200,8 @@ document.querySelector('#chat-message-submit').onclick = function (e) {
 
 function showusername() {
 
-
     const username = JSON.parse(localStorage.getItem("username"))
-
     document.querySelector('#user-name-box').innerHTML = ('Welcome, ' + username.username)
-
-
 
 }
 
@@ -196,11 +219,9 @@ function pickanswer() {
 }
 
 function nextQuestion() {
-    console.log('click')
-    console.log(localStorage.getItem('qid'))
     chatSocket.send(JSON.stringify({
         'request_type': 'next',
-        'user_name': 'next question logic',
+        'user_name': localStorage.getItem('username'),
         'pattern': localStorage.getItem('pattern'),
         'qid': localStorage.getItem('qid')
     }))

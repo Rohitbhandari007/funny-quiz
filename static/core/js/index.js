@@ -1,20 +1,17 @@
 var musicplaying = false;
-
 const hoveraudio = document.getElementById('hover-audio')
-
+let alertarea = document.getElementById('alert')
 
 function setUsername() {
     const username = document.querySelector('#user-name-input').value
-
     let obj = {
         'username': username
     }
     localStorage.setItem("username", JSON.stringify(obj))
-
-
     let newuserval = JSON.parse(localStorage.getItem('username'))
     console.log(newuserval)
 }
+
 
 function playHoverAudio() {
     hoveraudio.play()
@@ -78,13 +75,8 @@ document.querySelector('#room-name-submit').onclick = function (e) {
         setTimeout(alertpls, 100)
 
         function alertpls() {
-            alertarea = document.getElementById('alert')
             alertarea.style.visibility = 'visible'
-
-
         }
-
-
     } else {
         setUsername()
         window.location.pathname = '/chat/' + roomName + '/';

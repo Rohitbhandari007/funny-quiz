@@ -3,7 +3,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono&family=Roboto:wght@100&display=swap');
 body {
         background: #7fe17d;
-    }
+        animation: colorbody 20s infinite linear;
+      }
+
+
 .gametitle{
     font-family: 'Silkscreen', cursive;
     font-size: 50px;
@@ -17,6 +20,15 @@ body {
   font-family: 'DynaPuff', cursive;
   font-size: 20px;
   margin-left: 20px;
+}
+.name-btn-container{
+  display: flex;
+}
+.restart-button{
+  margin-left: 100px;
+  cursor: pointer;
+  outline: 0;
+  border: 0;
 }
 @keyframes titlecolor {
     0%   {background-color:red; left:0px; top:0px;}
@@ -37,6 +49,15 @@ body {
         
         
     }
+
+    @keyframes colorbody {
+      0%   { background: #33CCCC; }
+      20%  { background: #33CC36; }
+      40%  { background: #B8CC33; }
+      60%  { background: #FCCA00; }
+      80%  { background: #33CC36; }
+      100% { background: #33CCCC; }
+    }
     .gamecontainer{
         display: flex;
         flex-direction: column;
@@ -48,18 +69,22 @@ body {
     }
     .question{
         font-size: 20px;
-        margin-top: 10px;
+        margin-top: 20px;
     }
     .options{
         margin-left: 100px;
     }
-    .options p{
+    .options li{
       border: 1px solid gray;
         margin: 10px;
         border-radius: 10px;
-        background-color: yellow;
+        background-color: rgb(44, 230, 41);
         padding: 10px;
         cursor: pointer;
+        list-style: none;
+    }
+    li:hover{
+      background-color: green;
     }
     .option{
         border: 1px solid gray;
@@ -73,6 +98,24 @@ body {
         background-color: #688405;
     }
 
+    .alert{
+      background-color: rgb(178, 59, 59);
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 500px;
+      cursor: pointer;
+  }
+  .errormsg{
+    margin-top: 10px;
+    display: flex;
+    visibility: hidden;
+   
+}
+  .alert:hover{
+    background-color: rgb(198, 10, 10);
+  }
     .chatcontainer{
         display: flex;
         flex-direction: column;
