@@ -86,14 +86,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
             user_answer = text_data_json['user_answer']
             user_name = text_data_json['user_name']
 
-            
-
             await self.channel_layer.group_send(
                 self.room_group_name,
                 {
                     'type': 'answer_data',
                     'user_answer':user_answer,
-                    'user_name':user_name
+                    'user_name':user_name,
                     
                     
                 }
@@ -103,6 +101,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             user_name=text_data_json['user_name']
             pattern=text_data_json['pattern']
             qid=text_data_json['qid']
+            points=text_data_json['points']
             
 
 
@@ -112,7 +111,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'type': 'next_question',
                     'user_name':user_name,
                     'pattern':pattern,
-                    'qid':qid
+                    'qid':qid,
+                    'points':points,
+                    
                             
                 
                 }
@@ -188,7 +189,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         qids = []
         q_obj=[]
 
-
+        #for answer dictionary
         ans_arr=[]
         ans_correct=[]
 
@@ -204,9 +205,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             new_ans_correct.append(ans.correct)
             new_ans_arr_obj.append(ans)
         q_n = []
-        a=0
         for x in questions:
-            a=a+1
             q_arr.append(x.text)
             qids.append(x.id)
             q_obj.append(x)
@@ -251,11 +250,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def answer_data(self, event):
 
         user_name = event['user_name']
+        user_answer = event['user_answer']
 
         await self.send(text_data=json.dumps({
             'info':'answer',
-            'message':'correct answer',
-            'user_name': user_name
+            'user_name': user_name,
+            'user_answer': user_answer
         }))
     
 
@@ -264,26 +264,24 @@ class ChatConsumer(AsyncWebsocketConsumer):
         q_objects =  await database_sync_to_async(self.get_next_question)()
         pattern=event['pattern']
         qid=event['qid']
-        print(qid)
-
+      
         p=pattern.replace(',','')
         p = list(p)
-        
+        print('id of question')
+        print(qid)
+        print('received pattern')
+        print(p)
         objs=q_objects[0]
 
         
         if qid in p:
             p.remove(qid)
+            print('new pattern (removed id)')
             print(p)
-
-            for x in p:
-                x=int(x)
-                q_obj = objs[x]
-                q_name= objs[x].text
-                q_id=objs[x].id
             
         for q_id in p:
             q_id =q_id
+
 
         q_name = objs[int(q_id)].text
         q_obj = objs[int(q_id)]
@@ -312,6 +310,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print(ans_new_dict)
      
         user_name = event['user_name']
+        points = event['points']
         await self.send(text_data=json.dumps({
             'info':'next',
             'message': 'this is next quest',
@@ -321,5 +320,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'q_name':q_name,
             'q_id':q_id,
             'answers':ans_new_dict,
+            'points':points,
             
         }))

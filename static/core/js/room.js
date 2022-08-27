@@ -29,16 +29,12 @@ chatSocket.onmessage = function (e) {
     if (data.info === 'chat') {
         document.querySelector('#chat-log').innerHTML += ('<div class="message" onclick="pickanswer()">' + '[' + data.user + ']- ' + data.message + ' ' + '</div>');
 
-        console.log(data.command)
 
         const elem = document.getElementById('chat-log')
         elem.scrollTop = elem.scrollHeight;
 
 
-        if (data.user === currentuser.username) {
-            console.log('i sent messege')
-
-        } else {
+        if (data.user !== currentuser.username) {
             messageaudio.play()
         }
     } else if (data.info === 'quiz') {
@@ -71,16 +67,18 @@ chatSocket.onmessage = function (e) {
 
         document.querySelector('.question').innerHTML = data.question
 
+
         //this function loops through childs created inside options
         for (var child = options.firstChild; child !== null; child = child.nextSibling) {
             let child_value = child.value
             child.onclick = function () {
                 // 1 means true and 0 is false
                 if (child_value === 1) {
+
                     chatSocket.send(JSON.stringify({
                         'request_type': 'answer',
                         'user_answer': 'correct',
-                        'user_name': currentuser.username
+                        'user_name': currentuser.username,
                     }))
                     nextQuestion();
                 } else {
@@ -95,12 +93,11 @@ chatSocket.onmessage = function (e) {
 
 
     } else if (data.info === 'answer') {
-        console.log(data.message + ' by "' + data.user_name + '"')
+        console.log(data.user_answer + ' by "' + data.user_name + '"')
 
     } else if (data.info === 'join_game') {
 
         username = data.username.username
-        console.log(username.username)
 
         let message = 'Just joined'
         chatSocket.send(JSON.stringify({
@@ -115,10 +112,22 @@ chatSocket.onmessage = function (e) {
 
         let q_name = data.q_name
         let ans = data.answers
+        let user_name = JSON.parse(data.user_name)
 
 
-        console.log(q_name)
-        console.log(data.q_id)
+        let score_area = document.getElementById('score-area')
+
+        if (user_name.username = currentuser) {
+            score_area.innerHTML = user_name.username + data.points
+        } else {
+            let score_area2 = document.getElementById('score-area2')
+            score_area2.innerHTML = user_name.username + data.points
+        }
+
+
+
+
+
 
         localStorage.setItem('pattern', data.new_pattern)
         localStorage.setItem('qid', data.q_id)
@@ -157,9 +166,13 @@ chatSocket.onmessage = function (e) {
                 } else {
                     console.log('incorrect')
                     function alertgenerate() {
+                        let errormusic = document.getElementById('error_audio')
+                        errormusic.play()
+
                         alertarea.style.visibility = 'visible'
                     }
                     alertgenerate()
+                    playErrorMusic()
                 }
             };
         }
@@ -218,12 +231,27 @@ function pickanswer() {
     console.log('hello')
 }
 
+
+let points = 0
+
 function nextQuestion() {
+
+    points = points + 100
+    points_saved = localStorage.getItem('points')
+
+
     chatSocket.send(JSON.stringify({
         'request_type': 'next',
         'user_name': localStorage.getItem('username'),
         'pattern': localStorage.getItem('pattern'),
-        'qid': localStorage.getItem('qid')
+        'qid': localStorage.getItem('qid'),
+        'points': points,
     }))
 
+}
+
+
+//music 
+
+function playErrorMusic() {
 }

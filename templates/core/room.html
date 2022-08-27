@@ -8,6 +8,7 @@
 
     <title>Chat Room</title>
 </head>
+<audio id="error_audio" src="{% static 'error.mp3' %}"></audio>
 
 <body onload="showusername(); sendCommand()">
     <audio id="message-audio" src="{% static 'samsung.mp3' %}"></audio>
@@ -17,7 +18,12 @@
     <div class="name-btn-container">
         <div class="user-name-box" id="user-name-box">
         </div>
-        <button onclick="sendCommand()" class="restart-button">Restart</button>
+        <button onclick="sendCommand()" class="restart-button">Start / Restart</button>
+
+        <div class="score-area" id="score-area">
+
+        </div>
+        <div class="score-area2" id="score-area2"></div>
     </div>
 
 
@@ -25,6 +31,7 @@
 
 
         <div class="gamecontainer">
+            <div class="score" id="'score"></div>
             <div class="question"></div>
             <div class="options">
             </div>
